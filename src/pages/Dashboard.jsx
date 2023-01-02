@@ -5,11 +5,12 @@ import { Layout } from "./Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getMe } from "../features/authSlice";
+import { MapView } from "../components/Map/MapView";
+import { DataMap } from "../components/Map/DataMap";
 
 export const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { isError } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export const Dashboard = () => {
     <Layout>
       <Container style={{ textAlign: "center" }}>
         <Welcome />
+        <DataMap />
       </Container>
     </Layout>
   );

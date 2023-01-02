@@ -30,7 +30,10 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { Container } from "@mui/system";
 import img from "../ProfileColorful.jpg";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { LogOut, reset } from "../features/authSlice";
 
 const drawerWidth = 240;
 
@@ -85,6 +88,15 @@ export const Layout = ({ children }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openLink, setOpenLink] = React.useState(false);
   const openMenu = Boolean(anchorEl);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+
+  const logout = () => {
+    dispatch(LogOut());
+    dispatch(reset());
+    navigate("/");
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -124,9 +136,11 @@ export const Layout = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Rent a Car
-          </Typography>
+          <Container style={{ textAlign: 'center' }}>
+            <Typography variant="h6" noWrap component="div">
+              The GOAT Rent a Car
+            </Typography>
+          </Container>
           <Tooltip title="Account settings">
             <IconButton
               onClick={handleClick}
@@ -136,12 +150,9 @@ export const Layout = ({ children }) => {
               aria-haspopup="true"
               aria-expanded={openMenu ? "true" : undefined}
             >
-              {/* <Avatar sx={{ width: 30, height: 30 }}>
-                {name.charAt(0)} 
-              </Avatar> */}
               <Avatar
-                alt="Remy Sharp"
-                src={img}
+                alt={user && user.name}
+                src={user && user.photo}
                 sx={{ width: 32, height: 32 }}
               />
             </IconButton>
@@ -197,7 +208,7 @@ export const Layout = ({ children }) => {
               Wallet
             </MenuItem>
             <Divider />
-            <MenuItem>
+            <MenuItem onClick={logout}>
               <ListItemIcon>
                 <Logout fontSize="small" />
               </ListItemIcon>
@@ -256,36 +267,41 @@ export const Layout = ({ children }) => {
           </ListItem>
         </List>
         <Divider />
+        {user && user.role === "admin" && (
+          <>
+            <ListItem disablePadding>
+              <ListItemButton href="/users">
+                <ListItemIcon>
+                  <ManageAccountsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Users" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={handleClickLink}>
+                <ListItemIcon>
+                  <PsychologyIcon />
+                </ListItemIcon>
+                <ListItemText primary="Manage Vehicles" />
+                {openLink ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openLink} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton sx={{ pl: 4 }} href="/vehicles">
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText primary="Add" />
+                </ListItemButton>
+              </List>
+            </Collapse>
+            <Divider />
+          </>
+        )}
+
         <ListItem disablePadding>
-          <ListItemButton href="/users">
-            <ListItemIcon>
-              <ManageAccountsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Users" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-        <ListItemButton onClick={handleClickLink} >
-          <ListItemIcon>
-          <PsychologyIcon />
-          </ListItemIcon>
-          <ListItemText primary="Manage Vehicles" />
-          {openLink ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        </ListItem>
-        <Collapse in={openLink} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }} href="/vehicles">
-              <ListItemIcon>
-                <StarBorder />
-              </ListItemIcon>
-              <ListItemText primary="Add" />
-            </ListItemButton>
-          </List>
-        </Collapse>  
-        <Divider />
-        <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={logout}>
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
