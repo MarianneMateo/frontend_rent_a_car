@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { MapView } from "./MapView";
-import { IconMap } from "./IconMap";
 
 export const DataMap = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -19,7 +18,6 @@ export const DataMap = () => {
   return (
     <>
       <MapView vehicles={vehicles} />
-      <IconMap vehicles={vehicles}/>
       {/* {vehicles.map((v) => (
         <>
           <p>{`${v.brand}, ${v.latitude}, ${v.longitude}`}</p>

@@ -15,7 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import React, { useState } from "react";
 
-export const Bookinglist = () => {
+export const Userslist = () => {
   const [search, setSearch] = useState("");
 
   /* const handleSearch = () => {

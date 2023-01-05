@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { Bookingslist } from "../components/Bookingslist";
 import { Layout } from "./Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getMe } from "../features/authSlice";
+import { FormAddBooking } from "./../components/FormAddBooking";
 
-export const Bookings = () => {
+export const AddBooking = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isError } = useSelector((state) => state.auth);
@@ -19,9 +19,10 @@ export const Bookings = () => {
       navigate("/");
     }
   }, [isError, navigate]);
+
   return (
     <Layout>
-      <Bookingslist />
+      <FormAddBooking />
     </Layout>
   );
 };

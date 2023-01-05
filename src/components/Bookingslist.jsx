@@ -22,34 +22,37 @@ import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/core.css";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
-export const Vehicleslist = () => {
+export const Bookingslist = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const { user } = useSelector((state) => state.auth);
   const [page, setPage] = useState(1);
-  const [vehicles, setVehicles] = useState([]);
+  const [booking, setBooking] = useState([]);
+  const [totalToPay, setTotalToPay] = useState("");
 
   useEffect(() => {
-    getVehicles();
+    getBookings();
   }, []);
 
-  const getVehicles = async () => {
-    const response = await axios.get("http://localhost:5000/vehicles");
-    setVehicles(response.data);
+  const getBookings = async () => {
+    const response = await axios.get("http://localhost:5000/bookings");
+    setBooking(response.data);
   };
 
-  const deleteVehicle = async (vehicleId) => {
-    await axios.delete(`http://localhost:5000/vehicles/${vehicleId}`);
-    getVehicles();
+  const deleteBooking = async (bookingId) => {
+    await axios.delete(`http://localhost:5000/bookings/${bookingId}`);
+    getBookings();
   };
 
   const handleSearch = () => {
-    return vehicles?.filter(
+    const filter = booking?.filter(
       (c) =>
-        c.brand.toLowerCase().includes(search.toLowerCase()) ||
-        c.type.toLowerCase().includes(search.toLowerCase())
+        c.vehicle.brand.toLowerCase().includes(search.toLowerCase()) ||
+        c.user.name.toLowerCase().includes(search.toLowerCase())
     );
+    return filter;
   };
 
   return (
@@ -82,75 +85,78 @@ export const Vehicleslist = () => {
         />
       </div>
       <TableContainer component={Paper}>
-        {user && user.role === "admin" && (
-          <Button
-            variant="contained"
-            endIcon={<AddCircleIcon />}
-            style={{
-              float: "left",
-              margin: "20px",
-              backgroundColor: "#0652DD",
-            }}
-            onClick={() => navigate(`/vehicles/add`)}
-          >
-            Add New
-          </Button>
-        )}
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              {["No", "Brand", "Price", "Type", "Photo", "Actions"].map(
-                (head) => (
-                  <TableCell
-                    style={{
-                      color: "#777",
-                      fontWeight: "700",
-                    }}
-                    key={head}
-                  >
-                    {head}
-                  </TableCell>
-                )
-              )}
+              {[
+                "No",
+                "Rented by",
+                "Brand",
+                "Photo",
+                "Start date",
+                "End date",
+                "Days",
+                "Price per day",
+                "Total to pay",
+                "Actions",
+              ].map((head) => (
+                <TableCell
+                  style={{
+                    color: "#777",
+                    fontWeight: "700",
+                  }}
+                  key={head}
+                >
+                  {head}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {handleSearch()
               .slice((page - 1) * 10, (page - 1) * 10 + 10)
-              .map((vehicle, index) => (
+              .map((booking, index) => (
                 <TableRow
-                  key={vehicle.uuid}
+                  key={booking.uuid}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell>{index + 1}</TableCell>
                   <TableCell component="th" scope="row">
-                    {vehicle.brand}
+                    {booking.user.name}
                   </TableCell>
-                  <TableCell>{vehicle.pricePerDay}</TableCell>
-                  <TableCell>{vehicle.type}</TableCell>
+                  <TableCell>{booking.vehicle.brand}</TableCell>
                   <TableCell>
                     <img
-                      src={vehicle.photo}
-                      alt={vehicle.brand}
+                      src={booking.vehicle.photo}
+                      alt={booking.vehicle.brand}
                       className="rounded-circle"
                     />
+                  </TableCell>
+                  <TableCell>
+                    {moment(booking.startDate).format("ll")}
+                  </TableCell>
+                  <TableCell>{moment(booking.endDate).format("ll")}</TableCell>
+                  <TableCell>
+                    {moment(booking.endDate).diff(
+                      moment(booking.startDate),
+                      "days"
+                    )}
+                  </TableCell>
+                  <TableCell>{booking.vehicle.pricePerDay}$</TableCell>
+                  <TableCell>
+                    {moment(booking.endDate).diff(
+                      moment(booking.startDate),
+                      "days"
+                    ) * booking.vehicle.pricePerDay}
+                    $
                   </TableCell>
                   {user && user.role === "admin" ? (
                     <TableCell>
                       <Button
                         variant="text"
-                        style={{ color: "#4cd137" }}
-                        onClick={() =>
-                          navigate(`/bookings/add/${vehicle.id}`)
-                        }
-                      >
-                        Booking
-                      </Button>
-                      <Button
-                        variant="text"
                         style={{ color: "#0652DD" }}
                         onClick={() =>
-                          navigate(`/vehicles/edit/${vehicle.uuid}`)
+                          navigate(`/bookings/edit/${booking.vehicle.uuid}`)
                         }
                       >
                         Edit
@@ -162,15 +168,28 @@ export const Vehicleslist = () => {
                       >
                         Delete
                       </Button>
+                      {booking.user.name === "Admin" && (
+                        <Button
+                          variant="text"
+                          style={{ color: "#4cd137" }}
+                          onClick={() =>
+                            navigate(`/bookings/${booking.vehicle.id}`)
+                          }
+                        >
+                          Pay
+                        </Button>
+                      )}
                     </TableCell>
                   ) : (
                     <TableCell>
                       <Button
                         variant="text"
-                        style={{ color: "#0652DD" }}
-                        onClick={() => navigate(`/bookings/add/${vehicle.id}`)}
+                        style={{ color: "#4cd137" }}
+                        onClick={() =>
+                          navigate(`/bookings/${booking.vehicle.id}`)
+                        }
                       >
-                        Booking
+                        Pay
                       </Button>
                     </TableCell>
                   )}
@@ -195,3 +214,5 @@ export const Vehicleslist = () => {
     </Container>
   );
 };
+
+/* {user && user.role === 'admin' ? (<Button>Pay</Button>) : user && booking.user.name === 'admin' ? (<Button>Pay</Button>) : (<Button>Pay</Button>) } */

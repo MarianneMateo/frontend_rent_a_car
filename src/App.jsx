@@ -8,6 +8,8 @@ import { EditUser } from "./pages/EditUser";
 import { EditVehicle } from "./pages/EditVehicle";
 import { Users } from "./pages/Users";
 import { Vehicles } from "./pages/Vehicles";
+import { AddBooking } from "./pages/AddBooking";
+import { EditBooking } from "./pages/EditBooking";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path="/vehicles/add" element={<AddVehicle />} />
           <Route path="/vehicles/edit/:id" element={<EditVehicle />} />
           <Route path="/bookings" element={<Bookings />} />
+          <Route path="/bookings/add/:vehicleId" element={<AddBooking />} />
+          <Route path="/bookings/edit/:id" element={<EditBooking />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
-import { Bookingslist } from "../components/Bookingslist";
 import { Layout } from "./Layout";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getMe } from "../features/authSlice";
+import { FormEditBooking } from "../components/FormEditBooking";
 
-export const Bookings = () => {
+export const EditBooking = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isError } = useSelector((state) => state.auth);
+  const { isError, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getMe());
@@ -18,10 +18,14 @@ export const Bookings = () => {
     if (isError) {
       navigate("/");
     }
-  }, [isError, navigate]);
+    if (user && user.role !== "admin") {
+      navigate("/dashboard");
+    }
+  }, [isError, user, navigate]);
+
   return (
     <Layout>
-      <Bookingslist />
+      <FormEditBooking />
     </Layout>
   );
 };

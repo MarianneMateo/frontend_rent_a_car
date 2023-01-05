@@ -130,6 +130,7 @@ export const FormAddVehicle = () => {
           value={longitude}
           onChange={({ target }) => setLongitude(target.value)}
         />
+        {msg && <p style={{ color: "red" }}>{msg}!</p>}
         <Button
           variant="contained"
           style={{ marginTop: "20px", backgroundColor: "#0652DD" }}
