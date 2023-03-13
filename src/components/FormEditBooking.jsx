@@ -30,7 +30,7 @@ export const FormEditBooking = () => {
   const [msg, setMsg] = React.useState("");
   const [dates, setDates] = React.useState([]);
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id, vehicleId } = useParams();
 
   React.useEffect(() => {
     const getVehicleById = async () => {
@@ -38,8 +38,8 @@ export const FormEditBooking = () => {
         const response = await axios.get(
           `http://localhost:5000/bookings/${id}`
         );
-        setBrand(response.data.brand);
-        setSa
+        setStartDate(response.data.startDate)
+        setEndDate(response.data.endDate)
       } catch (error) {
         if (error.response) {
           setMsg(error.response.data.msg);
@@ -52,10 +52,10 @@ export const FormEditBooking = () => {
   console.log(moment(startDate.$d).format("ll"));
   console.log(moment(endDate.$d).format("ll"));
 
-  const saveBooking = async (e) => {
+  const updateBooking = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5000/bookings/${vehicleId}`, {
+      await axios.patch(`http://localhost:5000/bookings/${id}/${vehicleId}`, {
         startDate: startDate,
         endDate: endDate,
       });
@@ -101,7 +101,7 @@ export const FormEditBooking = () => {
         Booking
       </Typography>
 
-      <form onSubmit={saveBooking}>
+      <form onSubmit={updateBooking}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Stack spacing={3}>
             <DatePicker

@@ -28,12 +28,14 @@ export const Welcome = () => {
     <>
       <TableContainer
         component={Paper}
-        sx={{ width: 260, float: "right", marginTop: 2 }}
+        sx={{ width: 200, float: "right", marginTop: 2 }}
       >
-        <Table sx={{ width: 260 }} size="small" aria-label="a dense table">
+        <Table sx={{ width: 200 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell colSpan={2}>Location Legend</TableCell>
+              <TableCell colSpan={2} style={{ textAlign: "center" }}>
+                Location Legend
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -42,7 +44,7 @@ export const Welcome = () => {
                 key={index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="right">
+                <TableCell>
                   <img src={row.icon} alt={row.text} />
                 </TableCell>
                 <TableCell component="th" scope="row">

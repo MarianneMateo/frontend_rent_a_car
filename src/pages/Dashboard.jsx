@@ -25,7 +25,7 @@ export const Dashboard = () => {
 
   return (
     <Layout>
-      <Container style={{ textAlign: "center" }}>
+      <Container /* style={{ textAlign: "center" }} */>
         <DataMap />
         <Welcome />
       </Container>

@@ -11,17 +11,17 @@ import {
   TableHead,
   TableRow,
   TextField,
-  IconButton,
   Pagination,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { style } from "@mui/system";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/core.css";
 import { useSelector } from "react-redux";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 export const Vehicleslist = () => {
   const navigate = useNavigate();
@@ -140,11 +140,9 @@ export const Vehicleslist = () => {
                       <Button
                         variant="text"
                         style={{ color: "#4cd137" }}
-                        onClick={() =>
-                          navigate(`/bookings/add/${vehicle.id}`)
-                        }
+                        onClick={() => navigate(`/bookings/add/${vehicle.id}`)}
                       >
-                        Booking
+                        <DateRangeIcon />
                       </Button>
                       <Button
                         variant="text"
@@ -153,24 +151,24 @@ export const Vehicleslist = () => {
                           navigate(`/vehicles/edit/${vehicle.uuid}`)
                         }
                       >
-                        Edit
+                        <EditIcon />
                       </Button>
                       <Button
                         variant="text"
-                        style={{ color: "#eb2f06" }}
+                        style={{ color: "#EA2027" }}
                         onClick={() => deleteVehicle(vehicle.uuid)}
                       >
-                        Delete
+                        <DeleteIcon />
                       </Button>
                     </TableCell>
                   ) : (
                     <TableCell>
                       <Button
                         variant="text"
-                        style={{ color: "#0652DD" }}
+                        style={{ color: "#4cd137" }}
                         onClick={() => navigate(`/bookings/add/${vehicle.id}`)}
                       >
-                        Booking
+                        <DateRangeIcon />
                       </Button>
                     </TableCell>
                   )}

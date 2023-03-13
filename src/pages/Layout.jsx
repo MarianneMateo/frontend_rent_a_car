@@ -34,6 +34,8 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LogOut, reset } from "../features/authSlice";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import PaidIcon from '@mui/icons-material/Paid';
 
 const drawerWidth = 240;
 
@@ -136,7 +138,7 @@ export const Layout = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Container style={{ textAlign: 'center' }}>
+          <Container style={{ textAlign: "center" }}>
             <Typography variant="h6" noWrap component="div">
               The GOAT Rent a Car
             </Typography>
@@ -263,6 +265,14 @@ export const Layout = ({ children }) => {
                 <DateRangeIcon />
               </ListItemIcon>
               <ListItemText primary="Bookings" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton href="/payments">
+              <ListItemIcon>
+                <PaidIcon />
+              </ListItemIcon>
+              <ListItemText primary="Payments" />
             </ListItemButton>
           </ListItem>
         </List>

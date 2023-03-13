@@ -11,18 +11,21 @@ import {
   TableHead,
   TableRow,
   TextField,
-  IconButton,
   Pagination,
+  Chip,
+  Grid,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { style } from "@mui/system";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/core.css";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import { useTheme } from "@mui/material/styles";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 
 export const Bookingslist = () => {
   const navigate = useNavigate();
@@ -30,7 +33,19 @@ export const Bookingslist = () => {
   const { user } = useSelector((state) => state.auth);
   const [page, setPage] = useState(1);
   const [booking, setBooking] = useState([]);
-  const [totalToPay, setTotalToPay] = useState("");
+
+  const chipSX = {
+    height: 28,
+    padding: "0 6px",
+    fontWeight: "500",
+  };
+
+  const chipSuccessSX = {
+    ...chipSX,
+    color: "#009432",
+    backgroundColor: "#b8e994",
+    marginRight: "5px",
+  };
 
   useEffect(() => {
     getBookings();
@@ -95,10 +110,8 @@ export const Bookingslist = () => {
                 "Photo",
                 "Start date",
                 "End date",
-                "Days",
-                "Price per day",
                 "Total to pay",
-                "Actions",
+                "",
               ].map((head) => (
                 <TableCell
                   style={{
@@ -136,61 +149,55 @@ export const Bookingslist = () => {
                     {moment(booking.startDate).format("ll")}
                   </TableCell>
                   <TableCell>{moment(booking.endDate).format("ll")}</TableCell>
-                  <TableCell>
-                    {moment(booking.endDate).diff(
-                      moment(booking.startDate),
-                      "days"
-                    )}
-                  </TableCell>
-                  <TableCell>{booking.vehicle.pricePerDay}$</TableCell>
-                  <TableCell>
-                    {moment(booking.endDate).diff(
-                      moment(booking.startDate),
-                      "days"
-                    ) * booking.vehicle.pricePerDay}
-                    $
-                  </TableCell>
+                  {Math.trunc(booking.totalPay) == 0 ? (
+                    <TableCell>
+                      <Grid item>
+                        <Chip
+                          label="Paid"
+                          sx={chipSuccessSX}
+                          color="success"
+                          icon={<PriceCheckIcon />}
+                        />
+                      </Grid>
+                    </TableCell>
+                  ) : (
+                    <TableCell>${Math.trunc(booking.totalPay)}</TableCell>
+                  )}
                   {user && user.role === "admin" ? (
                     <TableCell>
+                      {booking.user.name === "Admin" &&
+                        Math.trunc(booking.totalPay) !== 0 && (
+                          <Button
+                            variant="text"
+                            style={{ color: "#4cd137" }}
+                            onClick={() =>
+                              navigate(`/payments/add/${booking.id}`)
+                            }
+                          >
+                            <LocalAtmIcon />
+                          </Button>
+                        )}
                       <Button
                         variant="text"
-                        style={{ color: "#0652DD" }}
-                        onClick={() =>
-                          navigate(`/bookings/edit/${booking.vehicle.uuid}`)
-                        }
+                        style={{ color: "#EA2027" }}
+                        onClick={() => deleteBooking(booking.uuid)}
                       >
-                        Edit
+                        <DeleteIcon />
                       </Button>
-                      <Button
-                        variant="text"
-                        style={{ color: "#eb2f06" }}
-                        onClick={() => deleteVehicle(vehicle.uuid)}
-                      >
-                        Delete
-                      </Button>
-                      {booking.user.name === "Admin" && (
+                    </TableCell>
+                  ) : (
+                    <TableCell>
+                      {Math.trunc(booking.totalPay) !== 0 && (
                         <Button
                           variant="text"
                           style={{ color: "#4cd137" }}
                           onClick={() =>
-                            navigate(`/bookings/${booking.vehicle.id}`)
+                            navigate(`/payments/add/${booking.id}`)
                           }
                         >
-                          Pay
+                          <LocalAtmIcon />
                         </Button>
                       )}
-                    </TableCell>
-                  ) : (
-                    <TableCell>
-                      <Button
-                        variant="text"
-                        style={{ color: "#4cd137" }}
-                        onClick={() =>
-                          navigate(`/bookings/${booking.vehicle.id}`)
-                        }
-                      >
-                        Pay
-                      </Button>
                     </TableCell>
                   )}
                 </TableRow>
@@ -214,5 +221,3 @@ export const Bookingslist = () => {
     </Container>
   );
 };
-
-/* {user && user.role === 'admin' ? (<Button>Pay</Button>) : user && booking.user.name === 'admin' ? (<Button>Pay</Button>) : (<Button>Pay</Button>) } */

@@ -16,6 +16,7 @@
     "@mui/styles": "^5.11.2",
     "@mui/x-date-pickers": "^5.0.12",
     "@mui/x-date-pickers-pro": "^5.0.12",
+    "@react-pdf/renderer": "^3.0.2",
     "@reduxjs/toolkit": "^1.9.1",
     "axios": "^1.2.2",
     "bulma": "^0.9.4",
@@ -30,7 +31,13 @@
     "react-leaflet": "^4.2.0",
     "react-moment": "^1.1.2",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^6.6.1"
+    "react-router-dom": "^6.6.1",
+    "react-to-print": "^2.14.11"
+  },
+  "overrides": {
+    "@react-pdf/renderer": {
+      "react": "^18.2.0"
+    }
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
